@@ -1,15 +1,5 @@
 <?php
-//local
-// $servername = "localhost";
-// $username = "root";
-// $password = "";
-// $dbname = "database";
-// $respuesta = Array();
-//host
-// $servername = "localhost";
-// $username = "id15866687_yaguegjm";
-// $password = "Sofia685823610.";
-// $dbname = "id15866687_database";
+// SELECT * FROM `temperaturas` WHERE temperaturas.id % 5 = 0 ORDER BY temperaturas.fecha DESC LIMIT 2
 include_once "variables.php";
 
 // Create connection
@@ -20,38 +10,50 @@ if (!$conn) {
 }
 
 
+$respuesta = array();
 
-$sql = "SELECT * FROM `temperaturas` WHERE id = (SELECT MAX(id) FROM `temperaturas`)";
+// $sql = "SELECT * FROM `temperaturas` WHERE temperaturas.id % 5 = 0 ORDER BY temperaturas.fecha DESC LIMIT 72"; //actualmente serian 12 horas, ya que el esp mide cada dos minutos
+$sql = "SELECT * FROM `temperaturas` ORDER BY temperaturas.fecha DESC LIMIT 360"; //actualmente serian 12 horas, ya que el esp mide cada dos minutos
 if ($resultado = mysqli_query($conn, $sql)) {
     // printf("La selección devolvió %d filas.\n", mysqli_num_rows($resultado));
-    $valor = $resultado->fetch_assoc();
-    $respuesta["temperatura"] = $valor["temperatura"];
-    $respuesta["fecha"] = $valor["fecha"];
-    $respuesta["humedad"] = $valor["humedad"];
-    /* liberar el conjunto de resultados */
+    $cont = 0;
+    while( $row = $resultado->fetch_assoc() ) {
+      if($cont%25==0){
+        $temporal = array();
+        $temporal[] = $row["temperatura"];
+        $temporal[] = $row["humedad"];
+        $temporal[] = $row["fecha"];
+        $respuesta[] = $temporal;
+      }
+      $cont++;
+     
+  }
     mysqli_free_result($resultado);
 }
 
-// while ($fila = mysql_fetch_assoc($resultado)) {
-//     echo $fila['temperatura'];
-    
-// }
 mysqli_close($conn);
 
 function mostarHtml(){
   global $respuesta;
-  echo "<h1>Temperatura:  ". $respuesta["temperatura"] . " C</h1>";
-  echo "<h1>Humedad:  ". $respuesta["humedad"] . " %</h1>";
-  echo "<h1>Fecha:  ". $respuesta["fecha"] . "</h1>";
+  for ($i=0; $i < count($respuesta); $i++) { 
+    echo "<h1>Temperatura:  ". $respuesta[$i][0] . " C</h1>";
+    echo "<h1>Humedad:  ". $respuesta[$i][1] . " %</h1>";
+    echo "<h1>Fecha:  ". $respuesta[$i][2] . "</h1>";
+    echo "</br></br></br></br>";
+  }
 }
 
 function mostrarJson(){
-  global $respuesta;
+  global $respuesta;  
   echo json_encode($respuesta);
 }
 
 // mostarHtml();
 // mostrarJson();
+if(isset($_REQUEST["json"])){
+  mostrarJson();
+}
+
 ?>
 
 
