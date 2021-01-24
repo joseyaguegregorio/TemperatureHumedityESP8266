@@ -12,16 +12,21 @@ if (!$conn) {
 
 $respuesta = array();
 
-$sql = "SELECT * FROM `temperaturas` WHERE temperaturas.id % 5 = 0 ORDER BY temperaturas.fecha DESC LIMIT 5"; //actualmente serian 12 horas, ya que el esp mide cada dos minutos
+// $sql = "SELECT * FROM `temperaturas` WHERE temperaturas.id % 5 = 0 ORDER BY temperaturas.fecha DESC LIMIT 72"; //actualmente serian 12 horas, ya que el esp mide cada dos minutos
+$sql = "SELECT * FROM `temperaturas` ORDER BY temperaturas.fecha DESC LIMIT 360"; //actualmente serian 12 horas, ya que el esp mide cada dos minutos
 if ($resultado = mysqli_query($conn, $sql)) {
     // printf("La selección devolvió %d filas.\n", mysqli_num_rows($resultado));
-
+    $cont = 0;
     while( $row = $resultado->fetch_assoc() ) {
-     $temporal = array();
-     $temporal[] = $row["temperatura"];
-     $temporal[] = $row["humedad"];
-     $temporal[] = $row["fecha"];
-     $respuesta[] = $temporal;
+      if($cont%25==0){
+        $temporal = array();
+        $temporal[] = $row["temperatura"];
+        $temporal[] = $row["humedad"];
+        $temporal[] = $row["fecha"];
+        $respuesta[] = $temporal;
+      }
+      $cont++;
+     
   }
     mysqli_free_result($resultado);
 }

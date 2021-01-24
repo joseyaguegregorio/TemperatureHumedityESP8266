@@ -11,57 +11,69 @@
     <title>Document</title>
 </head>
 <body>
-<h1>Prueba2</h1>
-<canvas id="myChart" width="400" height="400"></canvas>
+<h2 id = "idTemperatura"></h2>
+<h2 id = "idHumedad"></h2>
+<h2 id = "idFecha"></h2>
+</br></br></br>
+<h2>Temperaturas</h2>
+<canvas id="myChartTemperatura" width="300" height="200"></canvas>
+<h2>Humedades</h2>
+<canvas id="myChartHumedad" width="300" height="200"></canvas>
 <script>
     var temperaturas = [];
+    var humedaddes = [];
     var fechas = [];
     var request = new XMLHttpRequest();
     request.open('GET', 'prueba.php', false);  // `false` makes the request synchronous
     request.send(null);
 
     if (request.status === 200) {
-    console.log(request.responseText);
+    // console.log(request.responseText);
     myParseo(JSON.parse(request.responseText));
     }
 
     function myParseo(json) {
        for (let i = 0; i< json.length; i++) {
-                // console.log(json[i][2]);
+        //    if(i%10 == 0){ //Divisiones consideradas de la curva
+            // console.log(json[i][2]);
                 temperaturas.push(json[i][0]);
+                humedaddes.push(json[i][1]);
                 var fechasAcortadas = json[i][2].slice(11,16);
-                fechas.push(fechasAcortadas);
-            }
+                fechas.push(fechasAcortadas);  
+        //    }
+                
+        }
     }
 
-    
+document.getElementById('idTemperatura').innerText = "Temperatura: "+temperaturas[0] + " °C";
+document.getElementById('idHumedad').innerText = "Humedad: "+temperaturas[0] + " %";
+document.getElementById('idFecha').innerText = "Hora: "+fechas[0];
 
-    var jose = ["1","2"]
-    var ctx = document.getElementById('myChart').getContext('2d');
+
+
+    
+console.log(fechas);
+//temperatura
+    
+    var ctx = document.getElementById('myChartTemperatura').getContext('2d');
     var myChart = new Chart(ctx, {
         type: 'line',
         data: {
-            labels: fechas,
+            labels: fechas.reverse(),
             datasets: [{
-                label: '# of Votes',
-                data: [12, 19, 3, 5, 2, 3],
-                backgroundColor: [
-                    'rgba(255, 99, 132, 0.2)',
-                    'rgba(54, 162, 235, 0.2)',
-                    'rgba(255, 206, 86, 0.2)',
-                    'rgba(75, 192, 192, 0.2)',
-                    'rgba(153, 102, 255, 0.2)',
-                    'rgba(255, 159, 64, 0.2)'
-                ],
-                borderColor: [
+                label: 'Temperatura',
+                data: temperaturas.reverse(),
+                // backgroundColor: [
+                //     'rgba(255, 99, 132, 0.2)',
+                //     'rgba(54, 162, 235, 0.2)',
+                //     'rgba(255, 206, 86, 0.2)',
+                //     'rgba(75, 192, 192, 0.2)',
+                //     'rgba(153, 102, 255, 0.2)',
+                //     'rgba(255, 159, 64, 0.2)'
+                // ],
+                borderColor: 
                     'rgba(255, 99, 132, 1)',
-                    'rgba(54, 162, 235, 1)',
-                    'rgba(255, 206, 86, 1)',
-                    'rgba(75, 192, 192, 1)',
-                    'rgba(153, 102, 255, 1)',
-                    'rgba(255, 159, 64, 1)'
-                ],
-                borderWidth: 1
+                borderWidth: 2
             }]
         },
         options: {
@@ -71,7 +83,59 @@
                         beginAtZero: true
                     }
                 }]
-            }
+            },
+            elements: {
+                    point:{
+                        radius: 2
+                    }
+                },
+                legend: {
+                    display: false
+                },
+                
+        }
+    });
+
+
+//Humedad
+var ctx = document.getElementById('myChartHumedad').getContext('2d');
+    var myChart = new Chart(ctx, {
+        type: 'line',
+        data: {
+            labels: fechas.reverse(),
+            datasets: [{
+                label: 'Temperatura',
+                data: humedaddes.reverse(),
+                // backgroundColor: [
+                //     'rgba(255, 99, 132, 0.2)',
+                //     'rgba(54, 162, 235, 0.2)',
+                //     'rgba(255, 206, 86, 0.2)',
+                //     'rgba(75, 192, 192, 0.2)',
+                //     'rgba(153, 102, 255, 0.2)',
+                //     'rgba(255, 159, 64, 0.2)'
+                // ],
+                borderColor: 
+                    'rgba(51, 185, 255, 1)',
+                borderWidth: 2
+            }]
+        },
+        options: {
+            scales: {
+                yAxes: [{
+                    ticks: {
+                        beginAtZero: true
+                    }
+                }]
+            },
+            elements: {
+                    point:{
+                        radius: 2
+                    }
+                },
+                legend: {
+                    display: false
+                },
+                
         }
     });
 
