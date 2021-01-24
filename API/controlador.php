@@ -21,11 +21,13 @@ if (!$conn) {
 
 
 
-$sql = "SELECT temperatura FROM `temperaturas` WHERE id = (SELECT MAX(id) FROM `temperaturas`)";
+$sql = "SELECT * FROM `temperaturas` WHERE id = (SELECT MAX(id) FROM `temperaturas`)";
 if ($resultado = mysqli_query($conn, $sql)) {
     // printf("La selección devolvió %d filas.\n", mysqli_num_rows($resultado));
     $valor = $resultado->fetch_assoc();
     $respuesta["temperatura"] = $valor["temperatura"];
+    $respuesta["fecha"] = $valor["fecha"];
+    $respuesta["humedad"] = $valor["humedad"];
     /* liberar el conjunto de resultados */
     mysqli_free_result($resultado);
 }
@@ -38,7 +40,9 @@ mysqli_close($conn);
 
 function mostarHtml(){
   global $respuesta;
-  echo "<h1>La temperatura es:". $respuesta["temperatura"] . "</h1>";
+  echo "<h1>Temperatura:  ". $respuesta["temperatura"] . " C</h1>";
+  echo "<h1>Humedad:  ". $respuesta["humedad"] . " %</h1>";
+  echo "<h1>Fecha:  ". $respuesta["fecha"] . "</h1>";
 }
 
 function mostrarJson(){
