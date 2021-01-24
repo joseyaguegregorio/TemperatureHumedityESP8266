@@ -19,6 +19,7 @@
 <canvas id="myChartTemperatura" width="300" height="150"></canvas>
 <h2>Humedades</h2>
 <canvas id="myChartHumedad" width="300" height="150"></canvas>
+</br></br></br></br></br></br>
 <script>
     var temperaturas = [];
     var humedaddes = [];
@@ -46,7 +47,7 @@
     }
 
 document.getElementById('idTemperatura').innerText = "Temperatura: "+temperaturas[0] + " °C";
-document.getElementById('idHumedad').innerText = "Humedad: "+temperaturas[0] + " %";
+document.getElementById('idHumedad').innerText = "Humedad: "+humedaddes[0] + " %";
 document.getElementById('idFecha').innerText = "Hora: "+fechas[0];
 
 
@@ -96,10 +97,10 @@ var ctx = document.getElementById('myChartHumedad').getContext('2d');
     var myChart = new Chart(ctx, {
         type: 'line',
         data: {
-            labels: fechas.reverse(),
+            labels: fechas,
             datasets: [{
                 label: 'Temperatura',
-                data: humedaddes.reverse(),
+                data: humedaddes,
                 backgroundColor: 'rgba(51, 185, 255, 0.1)',
                 borderColor: 
                     'rgba(51, 185, 255, 1)',
@@ -128,6 +129,7 @@ var ctx = document.getElementById('myChartHumedad').getContext('2d');
 
 </script>
         <!-- <script>
+        //Version asincrona, no se puede modificar variables globales, ahora no sirve
         var xhr = new XMLHttpRequest();
         xhr.open('GET','prueba.php');
         xhr.onload = function(){
